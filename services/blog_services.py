@@ -42,7 +42,6 @@ class BlogService(Component):
         post_info.subtitle = post_id.subtitle
         post_info.content = post_id.content
         post_info.author_name = post_id.author_name
-        # __import__('pdb').set_trace()
         return post_info
 
     @restapi.method(
@@ -54,7 +53,6 @@ class BlogService(Component):
         """
         Update post informations
         """
-        # __import__('pdb').set_trace()
         post = self.env["blog.post"].browse(_id)
         post.name = post.name + ' test '
 
