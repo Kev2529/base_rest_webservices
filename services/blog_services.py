@@ -27,17 +27,56 @@ class BlogService(Component):
 
     @restapi.method(
         [(["/<int:id>"], "GET")],
-        output_param=Datamodel("blog.vehicle.info", partial=True),
+        output_param=Datamodel("blog.post.info", partial=True),
         auth="public",
     )
-    def get_blog_info(self, _id):
+    def get_post_info(self, _id):
         """
-        Get vehicle's information
+        Get post' information
         """
-        blog_id = self.env["blog.post"].browse(_id)
+        post_id = self.env["blog.post"].browse(_id)
         PostInfo = self.env.datamodels["blog.post.info"]
         post_info = PostInfo(partial=True)
-        post_info.name = blog_id.name
-        post_info.subtitle = blog_id.subtitle
-        post_info.content = blog_id.content
+        post_info.id = post_id.id
+        post_info.name = post_id.name
+        post_info.subtitle = post_id.subtitle
+        post_info.content = post_id.content
+        post_info.author_name = post_id.author_name
+        # __import__('pdb').set_trace()
         return post_info
+
+    @restapi.method(
+        [(["/<int:id>"], "POST")],
+        input_param=Datamodel("blog.post.update", partial=False),
+        auth="public",
+    )
+    def update(self, _id, message):
+        """
+        Update post informations
+        """
+        # __import__('pdb').set_trace()
+        post = self.env["blog.post"].browse(_id)
+        post.name = post.name + ' test '
+
+        return {
+            'name': post.name,
+            'subtitle': post.subtitle,
+            'content': post.content,
+        }
+
+    @restapi.method(
+        [(["/create"], "POST")],
+        input_param=Datamodel("blog.post.update", partial=False),
+        auth="public",
+    )
+    def create(self, vals):
+        new_post = {
+            'blog_id': 1,
+            'name': vals.name,
+            'content': vals.name,
+            'parent_id': False,
+            'tag_ids': [[6, 0, []]]
+        }
+        post_id = request.env['blog.post'].create(new_post)
+        new_post["id"] = post_id.id
+        return new_post

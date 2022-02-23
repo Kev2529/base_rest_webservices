@@ -11,4 +11,12 @@ class BlogPostInfo(Datamodel):
     name = fields.String(required=True, allow_none=False)
     subtitle = fields.String(required=True, allow_none=False)
     content = fields.String(required=True, allow_none=False)
-    # content = fields.Html(required=True, allow_none=False)
+    author_name = fields.String(required=False, allow_none=True)
+
+
+class BlogPostUpdate(Datamodel):
+    _name = "blog.post.update"
+
+    name = fields.String(required=False, allow_none=False)
+    subtitle = fields.String(required=False, allow_none=False)
+    content = fields.String(required=False, allow_none=False)
