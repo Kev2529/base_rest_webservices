@@ -19,26 +19,22 @@ class ForumService(Component):
     _inherit = "base.rest.service"
     _name = "forum.post.service"
     _usage = "forum"
-    _collection = "base.rest.webservices.public.services"
+    _collection = "base.rest.webservices.forum.services"
     _description = """
         Forum post
         Services developed with the new api provided by base_rest
     """
 
-    # @restapi.method(
-    #     [(["/<int:id>"], "GET")],
-    #     output_param=Datamodel("forum.post.info", partial=True),
-    #     auth="public",
-    # )
-    def get_post(self, _id):
+    @restapi.method(
+        [(["/<int:id>/get", "/<int:id>"], "GET")],
+        output_param=Datamodel("forum.post.info", partial=True),
+        auth="public",
+    )
+    def get(self, _id):
         """
         Get post's information
         """
         post_id = self.env["forum.post"].browse(_id)
-        # PostInfo = self.env.datamodels["forum.post.info"]
-        # post_info = PostInfo(partial=True)
-        # post_info.id = post_id.id
-        # post_info.name = post_id.name
         replies = []
         for reply in post_id.child_ids:
             replies.append({

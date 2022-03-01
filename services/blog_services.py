@@ -19,18 +19,18 @@ class BlogService(Component):
     _inherit = "base.rest.service"
     _name = "blog.post.service"
     _usage = "blog"
-    _collection = "base.rest.webservices.public.services"
+    _collection = "base.rest.webservices.blog.services"
     _description = """
         Blog post
         Services developed with the new api provided by base_rest
     """
 
     @restapi.method(
-        [(["/<int:id>"], "GET")],
-        output_param=Datamodel("blog.post.info", partial=True),
+        [(["/channel/<int:id>/get", "/channel//<int:id>"], "GET")],
+        output_param=Datamodel("blog.post.info"),
         auth="public",
     )
-    def get_post_info(self, _id):
+    def get(self, _id):
         """
         Get post' information
         """
