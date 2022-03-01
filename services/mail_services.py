@@ -108,7 +108,6 @@ class MailService(Component):
         Create a new channel
         """
         msg_id = request.env['mail.channel'].channel_create(vals.name)
-        __import__('pdb').set_trace()
         return {
             "status_code": 200,
             "channel": msg_id
