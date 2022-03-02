@@ -29,8 +29,20 @@ class MailChannelMessage(Datamodel):
     author_id = fields.Integer(required=False, allow_none=False)
     description = fields.String(required=False, allow_none=False)
     create_date = fields.DateTime(required=False, allow_none=False)
+    attachment_ids = fields.List(NestedModel(
+        "mail.channel.attachment"), required=False)
     # channel_ids = fields.List(
     #     NestedModel("mail.channel.message"), required=False, allow_none=True)
+
+
+class Attachment(Datamodel):
+    _name = "mail.channel.attachment"
+
+    id = fields.Integer(required=True, allow_none=False)
+    name = fields.String(required=True, allow_none=False)
+    type = fields.String(required=True, allow_none=False)
+    file_size = fields.Integer(required=True, allow_none=False)
+    mimetype = fields.String(required=True, allow_none=False)
 
 
 class MailChannelMessageCreate(Datamodel):

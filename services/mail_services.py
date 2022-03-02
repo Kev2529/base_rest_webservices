@@ -95,6 +95,17 @@ class MailService(Component):
                 #     msg_info.channel_ids.append(channel_ids)
                 if msg.body:
                     msg_info.description = self._html2text(msg.body)
+                if msg.attachment_ids:
+                    msg_info.attachment_ids = []
+                    AttachInfo = self.env.datamodels["mail.channel.attachment"]
+                    for attach_id in msg.attachment_ids:
+                        msg_info.attachment_ids.append(AttachInfo(
+                            id=attach_id.id,
+                            name=attach_id.name,
+                            type=attach_id.type,
+                            mimetype=attach_id.mimetype,
+                            file_size=attach_id.file_size
+                        ))
                 res.channel_message_ids.append(msg_info)
         return res
 
@@ -124,7 +135,6 @@ class MailService(Component):
         channel_id = self.env["mail.channel"].browse(_id)
         channel_id.unlink()
         return 200
-
 
     @restapi.method(
         [(["/message/new"], "POST")],
@@ -178,6 +188,27 @@ class MailService(Component):
         message_id = self.env["mail.message"].browse(_id)
         message_id.unlink()
         return 200
+
+    @restapi.method(
+        [(["/get_attachment/<int:id>"], "GET")],
+        auth="public",
+    )
+    def get_attachment(self, _id):
+        """
+        Download attachment
+        """
+        # attachment_id = self.env["ir."]
+        status, headers, content = self.env["ir.http"].binary_content(
+            model="ir.attachment",
+            id=_id,
+            mimetype="applicaton/pdf")
+        if not content:
+            raise MissingError(_("No file found for id : %s") % _id)
+        image_base64 = base64.b64decode(content)
+        headers.append(("Content-Length", len(image_base64)))
+        response = request.make_response(image_base64, headers)
+        response.status_code = status
+        return response
 
     # The following method are 'private' and should be never never NEVER call
     # from the controller.
