@@ -26,7 +26,7 @@ class BlogService(Component):
     """
 
     @restapi.method(
-        [(["/channel/<int:id>/get", "/channel//<int:id>"], "GET")],
+        [(["/channel/<int:id>/get", "/channel/<int:id>"], "GET")],
         output_param=Datamodel("blog.post.info"),
         auth="public",
     )
